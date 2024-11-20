@@ -51,6 +51,19 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 renderer.setPixelRatio(window.devicePixelRatio);
 document.body.appendChild(renderer.domElement);
 
+// Voeg een environment map toe
+const cubeTextureLoader = new THREE.CubeTextureLoader();
+const environmentMap = cubeTextureLoader.load([
+  '/envmap/px.png', // Positieve X
+  '/envmap/nx.png', // Negatieve X
+  '/envmap/py.png', // Positieve Y
+  '/envmap/ny.png', // Negatieve Y
+  '/envmap/pz.png', // Positieve Z
+  '/envmap/nz.png', // Negatieve Z
+]);
+scene.environment = environmentMap; // Stel de environment map in
+scene.background = environmentMap; // Gebruik dezelfde map als achtergrond
+
 // Lighting setup
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.8); // Soft ambient light
 scene.add(ambientLight);
@@ -103,7 +116,7 @@ loader.load(
     });
 
     // Scale the model
-    model.scale.set(3, 3, 3);
+    model.scale.set(10, 10, 10);
 
     // Add the model to the scene
     scene.add(model);
