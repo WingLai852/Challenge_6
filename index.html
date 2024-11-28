@@ -6,6 +6,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Schoen Configurator</title>
     <style>
+      /* Configuratiepaneel-stijl */
       #config-panel {
         position: absolute;
         top: 10px;
@@ -57,6 +58,49 @@
       #config-panel button:hover {
         background: #ffaa00;
       }
+
+      /* Bestelling-sectie */
+      #order-panel {
+        position: absolute;
+        bottom: 20px;
+        left: 50%;
+        transform: translateX(-50%);
+        text-align: center;
+        z-index: 9999;
+      }
+
+      #order-panel button {
+        background: #28a745;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+      }
+
+      #order-panel button:hover {
+        background: #218838;
+      }
+
+      #order-feedback {
+        margin-top: 15px;
+        padding: 10px;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        border-radius: 5px;
+        display: none;
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
     </style>
   </head>
   <body>
@@ -92,7 +136,31 @@
       <button id="reset-button">Reset</button>
     </div>
 
+    <!-- Bestelling sectie -->
+    <div id="order-panel">
+      <button id="place-order">Plaats Bestelling</button>
+      <div id="order-feedback">
+        <h3>Bestelling Bevestigd!</h3>
+        <p>Bedankt voor uw bestelling.</p>
+      </div>
+    </div>
+
     <div id="app"></div>
     <script type="module" src="/main.js"></script>
+    <script>
+      const placeOrderButton = document.getElementById('place-order');
+      const orderFeedback = document.getElementById('order-feedback');
+
+      // Bestelling plaatsen
+      placeOrderButton.addEventListener('click', () => {
+        // Toon feedback
+        orderFeedback.style.display = 'block';
+
+        // Verberg feedback na 3 seconden
+        setTimeout(() => {
+          orderFeedback.style.display = 'none';
+        }, 3000);
+      });
+    </script>
   </body>
 </html>
