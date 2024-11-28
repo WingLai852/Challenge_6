@@ -4,7 +4,60 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite App</title>
+    <title>Schoen Configurator</title>
+    <style>
+      #config-panel {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        width: 250px;
+        padding: 15px;
+        background: rgba(0, 0, 0, 0.8);
+        color: white;
+        border-radius: 8px;
+        font-family: Arial, sans-serif;
+        z-index: 9999;
+      }
+
+      #config-panel h2 {
+        margin-top: 0;
+        font-size: 18px;
+        color: #ffcc00;
+      }
+
+      #config-panel label {
+        display: block;
+        margin-top: 10px;
+        font-size: 14px;
+      }
+
+      #config-panel input,
+      #config-panel select,
+      #config-panel button {
+        width: 100%;
+        margin-top: 5px;
+        padding: 8px;
+        font-size: 14px;
+        border: none;
+        border-radius: 5px;
+      }
+
+      #config-panel input[type="color"] {
+        height: 40px;
+        padding: 0;
+      }
+
+      #config-panel button {
+        margin-top: 15px;
+        background: #ffcc00;
+        color: black;
+        cursor: pointer;
+      }
+
+      #config-panel button:hover {
+        background: #ffaa00;
+      }
+    </style>
   </head>
   <body>
     <div id="config-panel">
@@ -25,6 +78,15 @@
       <!-- Kleurselectie voor de schoen -->
       <label for="shoe-color">Schoen Kleur:</label>
       <input type="color" id="shoe-color" value="#cccccc" />
+
+      <!-- Textuur selectie -->
+      <label for="texture-select">Schoen Textuur:</label>
+      <select id="texture-select">
+        <option value="none">Geen</option>
+        <option value="leather">Leder</option>
+        <option value="mesh">Mesh</option>
+        <option value="fabric">Stof</option>
+      </select>
 
       <!-- Resetknop -->
       <button id="reset-button">Reset</button>
