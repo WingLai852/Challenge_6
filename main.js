@@ -2,27 +2,28 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/addons/loaders/GLTFLoader.js';
 import { DRACOLoader } from 'three/addons/loaders/DRACOLoader.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
+import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader.js'; // Import RGBELoader
 
-// HTML-elementen ophalen
+// HTML elements
 const lacesColorInput = document.getElementById('laces-color');
 const soleTopColorInput = document.getElementById('sole-top-color');
 const soleBottomColorInput = document.getElementById('sole-bottom-color');
 const shoeColorInput = document.getElementById('shoe-color');
+const shoeColorInput2 = document.getElementById('shoe-color2');
+const shoeColorInput3 = document.getElementById('shoe-color3'); // New color input for outside_3
 const textureSelect = document.getElementById('texture-select');
 const resetButton = document.getElementById('reset-button');
 
-// Variabelen voor schoenonderdelen
-let laces, soleTop, soleBottom, shoeBase;
+// Variables for shoe parts
+let laces, soleTop, soleBottom, shoeBase, outside_2, outside_3;
 
-// Texturen laden
+// Load textures
 const textureLoader = new THREE.TextureLoader();
 const leatherTexture = textureLoader.load('/textures/leather.jpg');
 const meshTexture = textureLoader.load('/textures/mesh.jpg');
 const fabricTexture = textureLoader.load('/textures/fabric.jpg');
 
-
-
-// Kleurwijzigingen
+// Color change events
 lacesColorInput.addEventListener('input', (event) => {
   if (laces) laces.material.color.set(event.target.value);
 });
@@ -37,41 +38,80 @@ soleBottomColorInput.addEventListener('input', (event) => {
 
 shoeColorInput.addEventListener('input', (event) => {
   if (shoeBase) {
-    shoeBase.material.map = null; // Verwijder huidige textuur
-    shoeBase.material.color.set(event.target.value); // Pas kleur aan
+    shoeBase.material.map = null;
+    shoeBase.material.color.set(event.target.value);
     shoeBase.material.needsUpdate = true;
   }
 });
 
-// Textuurwijzigingen
+shoeColorInput2.addEventListener('input', (event) => {
+  if (outside_2) {
+    outside_2.material.map = null;
+    outside_2.material.color.set(event.target.value);
+    outside_2.material.needsUpdate = true;
+  }
+});
+
+shoeColorInput3.addEventListener('input', (event) => { // New event listener for outside_3
+  if (outside_3) {
+    outside_3.material.map = null;
+    outside_3.material.color.set(event.target.value);
+    outside_3.material.needsUpdate = true;
+  }
+});
+
+// Texture change event
 textureSelect.addEventListener('change', (event) => {
+  const texturePath = event.target.value;
+  let selectedTexture = null;
+
+  switch (texturePath) {
+    case 'leather':
+      selectedTexture = leatherTexture;
+      break;
+    case 'mesh':
+      selectedTexture = meshTexture;
+      break;
+    case 'fabric':
+      selectedTexture = fabricTexture;
+      break;
+    default:
+      selectedTexture = null;
+  }
+
   if (shoeBase) {
-    switch (event.target.value) {
-      case 'leather':
-        shoeBase.material.map = leatherTexture;
-        break;
-      case 'mesh':
-        shoeBase.material.map = meshTexture;
-        break;
-      case 'fabric':
-        shoeBase.material.map = fabricTexture;
-        break;
-      default:
-        shoeBase.material.map = null; // Geen textuur
-    }
+    shoeBase.material.map = selectedTexture;
     shoeBase.material.needsUpdate = true;
+  }
+  if (outside_2) {
+    outside_2.material.map = selectedTexture;
+    outside_2.material.needsUpdate = true;
+  }
+  if (outside_3) {
+    outside_3.material.map = selectedTexture;
+    outside_3.material.needsUpdate = true;
   }
 });
 
-// Reset alle instellingen
+// Reset button event
 resetButton.addEventListener('click', () => {
   if (laces) laces.material.color.set('#ffffff');
   if (soleTop) soleTop.material.color.set('#ffffff');
   if (soleBottom) soleBottom.material.color.set('#000000');
   if (shoeBase) {
-    shoeBase.material.map = null; // Verwijder textuur
-    shoeBase.material.color.set('#cccccc'); // Standaard kleur
+    shoeBase.material.map = null;
+    shoeBase.material.color.set('#cccccc');
     shoeBase.material.needsUpdate = true;
+  }
+  if (outside_2) {
+    outside_2.material.map = null;
+    outside_2.material.color.set('#cccccc');
+    outside_2.material.needsUpdate = true;
+  }
+  if (outside_3) { // Reset color for outside_3
+    outside_3.material.map = null;
+    outside_3.material.color.set('#cccccc');
+    outside_3.material.needsUpdate = true;
   }
 });
 
@@ -79,25 +119,27 @@ resetButton.addEventListener('click', () => {
 const scene = new THREE.Scene();
 const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
 camera.position.set(0, 1, 5);
-
 const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setPixelRatio(3);
 renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
-// Environment map
-const cubeTextureLoader = new THREE.CubeTextureLoader();
-const environmentMap = cubeTextureLoader.load([
-  '/envmap/px.png',
-  '/envmap/nx.png',
-  '/envmap/py.png',
-  '/envmap/ny.png',
-  '/envmap/pz.png',
-  '/envmap/nz.png',
-]);
-scene.environment = environmentMap;
-scene.background = environmentMap;
+// Handle window resize
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
 
-// Verlichting
+// Load HDR environment map
+const rgbeLoader = new RGBELoader();
+rgbeLoader.load('/envmap/burnt_warehouse_4k.hdr', (texture) => {
+  texture.mapping = THREE.EquirectangularReflectionMapping;
+  scene.environment = texture;
+  scene.background = texture;
+});
+
+// Lighting
 const ambientLight = new THREE.AmbientLight(0xffffff, 0.8);
 scene.add(ambientLight);
 
@@ -109,19 +151,19 @@ scene.add(directionalLight);
 const controls = new OrbitControls(camera, renderer.domElement);
 controls.enableDamping = true;
 
-// DracoLoader instellen
+// DracoLoader setup
 const loader = new GLTFLoader();
 const dracoLoader = new DRACOLoader();
 dracoLoader.setDecoderPath('/draco/');
 loader.setDRACOLoader(dracoLoader);
 
-// Laad 3D-model
+// Load 3D model
 loader.load(
   '/models/Shoe_compressed.gltf',
   (gltf) => {
     const model = gltf.scene;
 
-    // Zoek onderdelen
+    // Find parts
     model.traverse((child) => {
       if (child.isMesh) {
         switch (child.name) {
@@ -137,6 +179,12 @@ loader.load(
           case 'outside_1':
             shoeBase = child;
             break;
+          case 'outside_2':
+            outside_2 = child;
+            break;
+          case 'outside_3': // Add case for outside_3
+            outside_3 = child;
+            break;
         }
       }
     });
@@ -145,11 +193,10 @@ loader.load(
     scene.add(model);
   },
   undefined,
-  (error) => console.error('Model kon niet geladen worden:', error)
+  (error) => console.error('Model could not be loaded:', error)
 );
 
-
-// Animatie loop
+// Animation loop
 function animate() {
   requestAnimationFrame(animate);
   controls.update();

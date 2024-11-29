@@ -6,6 +6,28 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Schoen Configurator</title>
     <style>
+      /* Algemene stijl */
+      body {
+        background: linear-gradient(135deg, #000000, #1e1e1e);
+        color: #ffffff;
+        font-family: 'Courier New', Courier, monospace;
+        margin: 0;
+        padding: 0;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+      }
+
+      /* Logo-stijl */
+      #logo {
+        position: absolute;
+        top: 20px;
+        left: 10px;
+        width: 200px;
+        height: auto;
+      }
+
       /* Configuratiepaneel-stijl */
       #config-panel {
         position: absolute;
@@ -13,17 +35,17 @@
         right: 10px;
         width: 250px;
         padding: 15px;
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
+        background: rgba(0, 0, 0, 0.9);
+        color: #ffffff;
         border-radius: 8px;
-        font-family: Arial, sans-serif;
+        font-family: 'Courier New', Courier, monospace;
         z-index: 9999;
       }
 
       #config-panel h2 {
         margin-top: 0;
         font-size: 18px;
-        color: #ffcc00;
+        color: #32cd32; /* Lime Green */
       }
 
       #config-panel label {
@@ -41,6 +63,8 @@
         font-size: 14px;
         border: none;
         border-radius: 5px;
+        background: #2e2e2e;
+        color: #ffffff;
       }
 
       #config-panel input[type="color"] {
@@ -50,13 +74,13 @@
 
       #config-panel button {
         margin-top: 15px;
-        background: #ffcc00;
-        color: black;
+        background: #32cd32; /* Lime Green */
+        color: white;
         cursor: pointer;
       }
 
       #config-panel button:hover {
-        background: #ffaa00;
+        background: #28a428; /* Darker Lime Green */
       }
 
       /* Bestelling-sectie */
@@ -70,7 +94,7 @@
       }
 
       #order-panel button {
-        background: #28a745;
+        background: #32cd32; /* Lime Green */
         color: white;
         padding: 10px 20px;
         border: none;
@@ -80,14 +104,37 @@
       }
 
       #order-panel button:hover {
-        background: #218838;
+        background: #28a428; /* Darker Lime Green */
       }
 
       #order-feedback {
         margin-top: 15px;
         padding: 10px;
-        background: rgba(0, 0, 0, 0.8);
-        color: white;
+        background: rgba(0, 0, 0, 0.9);
+        color: #ffffff;
+        border-radius: 5px;
+        display: none;
+        animation: fadeIn 0.5s ease-in-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+        }
+        to {
+          opacity: 1;
+        }
+      }
+
+      #order-panel button:hover {
+        background: #32cd12; /* Darker neo green */
+      }
+
+      #order-feedback {
+        margin-top: 15px;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.8);
+        color: black;
         border-radius: 5px;
         display: none;
         animation: fadeIn 0.5s ease-in-out;
@@ -104,6 +151,7 @@
     </style>
   </head>
   <body>
+    <img id="logo" src="/images/logo2.png" alt="Logo" />
     <div id="config-panel">
       <h2>Schoen Configuratie</h2>
 
@@ -122,6 +170,13 @@
       <!-- Kleurselectie voor de schoen -->
       <label for="shoe-color">Schoen Kleur:</label>
       <input type="color" id="shoe-color" value="#cccccc" />
+
+      <!-- Kleurselectie voor de schoen -->
+      <label for="shoe-color2">Schoen Kleur 2:</label>
+      <input type="color" id="shoe-color2" value="#cccccc" />
+      <!-- Kleurselectie voor de schoen -->
+      <label for="shoe-color2">Schoen Kleur 3:</label>
+      <input type="color" id="shoe-color3" value="#cccccc" />
 
       <!-- Textuur selectie -->
       <label for="texture-select">Schoen Textuur:</label>
